@@ -1,27 +1,39 @@
 import './css/styles.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { fetchCountries } from './fetchCountries.js';
+import FetchImages from './fetchimages.js';
 
 const form = document.getElementById('search-form');
 const input = document.querySelector('input');
 const cardList = document.querySelector('.gallery');
+const loadMoreBtn = document.querySelector('.load-more');
+const fetchImages = new FetchImages();
 
 form.addEventListener('submit', onSubmit);
+loadMoreBtn.addEventListener('click', fetchImagesFoo);
 
 function onSubmit(e) {
   e.preventDefault();
-  const findQuery = input.value.trim();
+  const currentQuery = input.value.trim();
 
-  if (findQuery === '') return;
+  if (currentQuery === '') return;
 
-  fetchCountries(findQuery).then(response => {
-   // console.log(response.data.hits);
-    const arrayOfImages = response.data.hits;
-    
-    Notify.info(`Hooray! We found ${response.data.totalHits} images.`);
+  cardList.innerHTML = '';
+  fetchImages.resetPage();
 
-    const cardMarkup = arrayOfImages.map(image => {
-      return `<div class="photo-card">
+  fetchImages.searchQuery = currentQuery;
+
+  fetchImagesFoo();
+}
+
+function fetchImagesFoo() {
+fetchImages.getImages().then(response => {
+  const arrayOfImages = response.data.hits;
+  console.log(arrayOfImages);
+
+  if(fetchImages.page === 1) Notify.info(`Hooray! We found ${response.data.totalHits} images.`);
+
+  const cardMarkup = arrayOfImages.map(image => {
+    return `<div class="photo-card">
       <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
            <div class="info">
               <p class="info-item">
@@ -42,9 +54,10 @@ function onSubmit(e) {
               </p>
            </div>
       </div>`;
-    });
-    cardList.innerHTML = cardMarkup.join('');
   });
+  cardList.insertAdjacentHTML('beforeend', cardMarkup.join(''));
+  fetchImages.nextPage();
+});
 }
 
 // const countryList = document.querySelector('.country-list');
