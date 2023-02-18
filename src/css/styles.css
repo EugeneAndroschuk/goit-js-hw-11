@@ -9,7 +9,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #fafafa;
   color: #212121;
-  /* line-height: 1.5; */
+  margin-top: 0;
 }
 
 img {
@@ -17,7 +17,25 @@ img {
   max-width: 100%;
 }
 
+input {
+  padding-left: 10px;
+ border: 1px solid rgba(33, 33, 33, 0.2);
+  border-radius: 6px;
+}
+
+.search-form {
+  position: fixed;
+  width: 100vw;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  padding: 10px;
+  background-color: #7976e7;
+ 
+}
+
 .gallery {
+  padding-top: 50px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -27,13 +45,45 @@ img {
 
 .photo-card {
   width: calc((100% - 30px) / 4);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 1px rgba(0, 0, 0, 0.14),
+    0px 2px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 0px 0px 4px 4px;
+}
+
+.photo-card:hover {
+  transform: scale(1.01);
 }
 
 .info {
   display: flex;
-  gap: 5px;
+  justify-content: space-between;
 }
 
 .info-item {
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
   text-align: center;
+}
+
+.load-more {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background-color: rgb(104, 104, 248);
+  border: 1px solid  rgb(104, 104, 248);
+  border-radius: 6px;
+  color: white;
+}
+
+.load-more:hover,
+.load-more:focus {
+  background-color: rgb(48, 48, 250);
+}
+
+.is-hidden {
+  display: none;
 }
