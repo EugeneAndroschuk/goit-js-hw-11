@@ -2,7 +2,7 @@ import './css/styles.css';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import FetchImages from './fetchimages.js';
+import FetchImages from './fetchImages.js';
 
 const form = document.getElementById('search-form');
 const input = document.querySelector('input');

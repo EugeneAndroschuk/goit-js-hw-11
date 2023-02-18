@@ -5,7 +5,7 @@ const API_KEY = '33674761-de1d44d4741b05ad048b05bf0';
 export default class FetchImages {
   constructor() {
     this.page = 1;
-    this.perPage = 8;
+    this.perPage = 40;
     this.searchQuery = '';
   }
 
