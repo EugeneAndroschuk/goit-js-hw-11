@@ -3,25 +3,22 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import FetchImages from './fetchImages.js';
+import throttle from 'lodash.throttle';
 
 const form = document.getElementById('search-form');
 const input = document.querySelector('input');
 const cardList = document.querySelector('.gallery');
-const loadMoreBtn = document.querySelector('.load-more');
+const spinner = document.querySelector('.spinner');
 const fetchImages = new FetchImages();
 const galleryOfImages = new SimpleLightbox('.gallery a');
 
 form.addEventListener('submit', onSubmit);
-loadMoreBtn.classList.add('is-hidden');
-loadMoreBtn.addEventListener('click', fetchImagesFoo);
 
 function onSubmit(e) {
   e.preventDefault();
   const currentQuery = input.value.trim();
 
   if (currentQuery === '') return;
-
-  loadMoreBtn.classList.add('is-hidden');
 
   cardList.innerHTML = '';
   fetchImages.resetPage();
@@ -46,12 +43,12 @@ async function fetchImagesFoo() {
     }
 
     if (fetchImages.page === 1 && response.data.totalHits !== 0) {
-      loadMoreBtn.classList.remove('is-hidden');
+      spinner.classList.remove('is-hidden');
       Notify.info(`Hooray! We found ${response.data.totalHits} images.`);
     }
 
     if (fetchImages.page === maxAllowedAmountOfPages) {
-      loadMoreBtn.classList.add('is-hidden');
+      spinner.classList.add('is-hidden');
       Notify.warning(
         "We're sorry, but you've reached the end of search results."
       );
@@ -73,22 +70,19 @@ async function fetchImagesFoo() {
                 </div>`;
       });
       cardList.insertAdjacentHTML('beforeend', cardMarkup.join(''));
-
-      if (fetchImages.page !== 1) {
-        const { height: cardHeight } = document
-          .querySelector('.gallery')
-          .firstElementChild.getBoundingClientRect();
-
-        window.scrollBy({
-          top: cardHeight * 2,
-          behavior: 'smooth',
-        });
-      }
-
       fetchImages.nextPage();
+
       galleryOfImages.refresh();
     }
   } catch (error) {
     console.log(error);
   }
+}
+
+window.addEventListener('scroll', throttle(() => onscroll(), 250));
+
+function onscroll() {
+  const documentRectangle = document.documentElement.getBoundingClientRect();
+  
+  if (documentRectangle.bottom < document.documentElement.clientHeight * 2) fetchImagesFoo();
 }
